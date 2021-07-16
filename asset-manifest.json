@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/Audio-Library/static/css/main.a617e044.chunk.css",
+    "main.js": "/Audio-Library/static/js/main.d1bce76a.chunk.js",
+    "main.js.map": "/Audio-Library/static/js/main.d1bce76a.chunk.js.map",
+    "runtime-main.js": "/Audio-Library/static/js/runtime-main.61b8bd79.js",
+    "runtime-main.js.map": "/Audio-Library/static/js/runtime-main.61b8bd79.js.map",
+    "static/js/2.ce79510f.chunk.js": "/Audio-Library/static/js/2.ce79510f.chunk.js",
+    "static/js/2.ce79510f.chunk.js.map": "/Audio-Library/static/js/2.ce79510f.chunk.js.map",
+    "static/js/3.b37bfcac.chunk.js": "/Audio-Library/static/js/3.b37bfcac.chunk.js",
+    "static/js/3.b37bfcac.chunk.js.map": "/Audio-Library/static/js/3.b37bfcac.chunk.js.map",
+    "index.html": "/Audio-Library/index.html",
+    "static/css/main.a617e044.chunk.css.map": "/Audio-Library/static/css/main.a617e044.chunk.css.map",
+    "static/js/2.ce79510f.chunk.js.LICENSE.txt": "/Audio-Library/static/js/2.ce79510f.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/Audio-Library/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.61b8bd79.js",
+    "static/js/2.ce79510f.chunk.js",
+    "static/css/main.a617e044.chunk.css",
+    "static/js/main.d1bce76a.chunk.js"
+  ]
+}
