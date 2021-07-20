@@ -1,0 +1,9 @@
+.carousel-caption{
+    text-align: left !important;
+  }
+  
+.image{
+    object-fit: contain;
+    width:100vw;
+    
+}
