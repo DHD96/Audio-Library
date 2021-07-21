@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Cards from '../components/cards';
+import Cards from '../components/Cards/cards';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import image1 from '../assets/images/img1.jpg';
