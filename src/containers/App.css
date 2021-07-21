@@ -5,6 +5,14 @@
   background-size:cover;
 }
 
+.btn-flat{
+  background-color:purple !important;
+  color:white !important;
+  
+}
 
+.float-right{
+  float:right;
+}
 
 

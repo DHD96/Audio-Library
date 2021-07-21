@@ -26,8 +26,8 @@ class App extends Component {
 
     return (
       <div className="App"> 
-        <Button onClick={this.toggleNumberOfTracks}>Toggle Number Of Tracks</Button>         
-        <Cards props= {this.state.cards} click={this.state.showTracks}/>
+        <Button variant="flat" onClick={this.toggleNumberOfTracks}>Toggle Number Of Tracks</Button>  
+        <Cards props= {this.state.cards} click={this.state.showTracks}/>    
       </div>
     );
   }

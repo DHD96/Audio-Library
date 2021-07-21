@@ -1,3 +1,13 @@
-p{
+.Description{
     overflow-y:scroll;
+    font-family: Roboto Condensed !important;
+
+}
+
+.Title{
+    font-family: Roboto Condensed !important;
+}
+
+.NumberOfTracks{
+    font-family: Roboto Condensed !important;
 }
