@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Cards from './containers/Cards/cards';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-
+import Navigation from './components/Navigation/Navigation';
 import Button from 'react-bootstrap/Button';
 import instance from './instance/axios';
 
@@ -34,6 +34,7 @@ class App extends Component {
 
     return (
       <div className="App">
+        <Navigation></Navigation>
         <Button variant="flat" onClick={this.toggleNumberOfTracks}>Toggle Number Of Tracks</Button>
         <Cards cards={this.state.cards} click={this.state.showTracks} />
       </div>
