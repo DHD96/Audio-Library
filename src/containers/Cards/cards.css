@@ -9,3 +9,13 @@
     
 }
 
+.btn-flat{
+  background-color:purple !important;
+  color:white !important;
+  position: absolute;
+  bottom:0;
+  left:0;
+  z-index:10;
+}
+
+

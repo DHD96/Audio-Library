@@ -1,17 +1,9 @@
 .App {
-  text-align: center;
-  height:100%;
+  text-align: left;
+  height:100vh;
   background-color: Black;
   background-size:cover;
 }
 
-.btn-flat{
-  background-color:purple !important;
-  color:white !important;
-  position: absolute;
-  bottom:0;
-  left:0;
-  z-index:10;
-}
 
 

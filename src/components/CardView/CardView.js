@@ -5,7 +5,7 @@ const CardView = ({ name, description, createdDate, updatedDate, nbOfTracks, cli
         return (<div className="CardView">
                 <h2 className="Title"> {name}</h2>
                 <p className="Description">Description: {description}</p>
-                <div className="Date">{createdDate}</div>
+                <div className="Date">Date of creation: {createdDate}</div>
                 {click === true ?
                         <span className="NumberOfTracks">Number of tracks: {nbOfTracks}</span>
                         :

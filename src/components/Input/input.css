@@ -1,0 +1,29 @@
+.Input{
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100vw;
+
+}
+
+.Label{
+    font-weight:bold;
+    display:block;
+    margin-bottom: 8px;
+    text-align:left;
+}
+
+.InputElement{
+    outline: none;
+    border: 1px solid yellow;
+    background-color:white;
+    font:Roboto Condensed !important;
+    padding: 6px 10px;
+    width:60vw;
+    display:block;
+    box-sizing: border-box;
+}
+
+.InputElement:focus{
+    background-color:darkgoldenrod;
+
+}
