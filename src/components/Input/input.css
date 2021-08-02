@@ -25,5 +25,10 @@
 
 .InputElement:focus{
     background-color:darkgoldenrod;
+    border: 1px solid orange;
+}
 
+.Invalid{
+    background-color:darksalmon;
+    border: 1px solid red;
 }

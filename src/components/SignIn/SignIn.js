@@ -3,8 +3,7 @@ import './signIn.css';
 import Input from '../Input/Input';
 import 'bootstrap/dist/css/bootstrap.css';
 import Button from 'react-bootstrap/Button';
-import { render } from '@testing-library/react';
-
+import validator from 'validator';
 class SignIn extends Component{
 
     state= {
@@ -12,27 +11,66 @@ class SignIn extends Component{
         {
             email:
             {
-                value: ""
+                value: "",
+                isValid: false,
+                rules:{
+                    required: true,
+                    email:true
+                },
+                touched: false
 
             },
             name:
             {
-                value: ""
+                value: "",
+                isValid: false,
+                rules:{
+                    required: true
+                },
+                touched: false
 
             },
             password:
             {
-                value: ""
+                value: "",
+                isValid: false,
+                rules:{
+                    required: true,
+                    minLength: 8   ,
+                    isPassword:true            
+                },
+                touched: false
 
             },
             confirmPassword:
             {
-                value: ""
-
-            },
+                value: "",
+                isValid: false,
+                rules:{
+                    required: true,
+                    minLength: 8,
+                    isPassword: true
+                },
+                touched: false
+            }
 
         },
         showSignIn: true
+    }
+
+    validate(value, rules){
+        let isValid = true;
+        
+        if(rules.required){
+            isValid= value.trim() !== "" && isValid;
+        }
+        if(rules.minLength){
+            isValid = (rules.minLength < value.trim().length) && isValid;
+        }
+        if(rules.email){
+            isValid = isValid && validator.isEmail(value);
+        }
+        return isValid;
     }
 
     submitHandler= (event) =>{
@@ -48,7 +86,9 @@ class SignIn extends Component{
     inputChangedHandler = (event, inputId) =>{
         let updatedForm= {...this.state.form};
         let updatedElement= {...this.state.form[inputId]};
-        updatedElement = event.target.value;
+        updatedElement.value = event.target.value;
+        updatedElement.touched =true;
+        updatedElement.isValid = this.validate(updatedElement.value, updatedElement.rules);       
         updatedForm[inputId] = updatedElement;
         this.setState({form: updatedForm});
     };
@@ -65,10 +105,10 @@ class SignIn extends Component{
                 </div>
             </div>
             <form onSubmit={this.submitHandler}>
-                {this.state.showSignIn ? null : <Input type="text" name="name" placeholder="Your Name" label="Name" onChange={(event)=> this.inputChangedHandler(event,"name")}></Input>}
-                <Input type="text" name="email" placeholder="Your Email" label="Email" onChange={(event)=> this.inputChangedHandler(event,"email")}></Input>    
-                <Input type="password" name="password" placeholder="Your Password" label="Password" onChange={(event)=> this.inputChangedHandler(event,"password")}></Input>
-                {this.state.showSignIn ? null : <Input type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={(event)=> this.inputChangedHandler(event,"confirmPassword")}></Input>}
+                {this.state.showSignIn ? null : <Input  invalid={!this.state.form.name.isValid && this.state.form.name.touched} type="text" name="name" placeholder="Your Name" label="Name" onChange={(event)=> this.inputChangedHandler(event,"name")}></Input>}
+                <Input invalid={!this.state.form.email.isValid && this.state.form.email.touched} type="text" name="email" placeholder="Your Email" label="Email" onChange={(event)=> this.inputChangedHandler(event,"email")}></Input>    
+                <Input invalid={!this.state.form.password.isValid && this.state.form.password.touched} type="password" name="password" placeholder="Your Password" label="Password" onChange={(event)=> this.inputChangedHandler(event,"password")}></Input>
+                {this.state.showSignIn ? null : <Input invalid={!this.state.form.confirmPassword.isValid && this.state.form.confirmPassword.touched}  type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={(event)=> this.inputChangedHandler(event,"confirmPassword")}></Input>}
                 <div className="container">
                     <div className="text-left">
                         <Button type="submit" className="btn" onClick={this.submitHandler}>{this.state.showSignIn ? "Sign In" : "Sign Up"}</Button>
