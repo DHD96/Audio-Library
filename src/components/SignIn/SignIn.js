@@ -4,6 +4,8 @@ import Input from '../Input/Input';
 import 'bootstrap/dist/css/bootstrap.css';
 import Button from 'react-bootstrap/Button';
 import validator from 'validator';
+import * as actions from '../../store/actions/index';
+import { connect } from 'react-redux';
 class SignIn extends Component {
 
     state = {
@@ -77,6 +79,12 @@ class SignIn extends Component {
         event.preventDefault();
         //check password if sign in check if password == confirm password if sign up
         //axios post
+        if(this.state.showSignIn){
+            this.props.onAuth(this.state.form.email.value, this.state.form.password.value, this.state.showSignIn);
+        }
+        else{
+            this.props.onAuth(this.state.form.email.value, this.state.form.password.value, this.state.showSignIn);
+        }
     }
 
     toggleHandler() {
@@ -102,7 +110,7 @@ class SignIn extends Component {
                         <div className="text-left">
                             <h1>{this.state.showSignIn ? "Sign In" : "Sign Up"}</h1>
 
-                            <Button onClick={this.toggleHandler.bind(this)}>Sign In/Sign Up</Button>
+                            <Button onClick={this.toggleHandler.bind(this)}>{this.state.showSignIn ? "Switch to Sign up" : "Switch to Sign in"}</Button>
                         </div>
                     </div>
                     <form onSubmit={this.submitHandler}>
@@ -121,4 +129,9 @@ class SignIn extends Component {
     }
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: (email, password, isSignIn) => dispatch(actions.auth(email, password, isSignIn))
+    };
+}
+export default connect(null, mapDispatchToProps)(SignIn);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://192.168.1.11:3001'
+    baseURL: 'https://react-audio-library-default-rtdb.firebaseio.com/'
 });
 axios.defaults.headers.post['Content-Type']= 'application/json';
 

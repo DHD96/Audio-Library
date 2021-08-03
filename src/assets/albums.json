@@ -1,0 +1,5 @@
+{"albums": 
+[
+    { "name": "Album1", "description": "Description 1", "nbOfTracks": 5, "createdDate": "02/07/21", "updatedDate": "07/07/21", "_id": 1 },
+    { "name": "Album2", "description": "Description 2", "nbOfTracks": 4, "createdDate": "02/07/21", "updatedDate": "07/07/21", "_id": 2 }
+]}

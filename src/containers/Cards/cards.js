@@ -5,18 +5,16 @@ import './cards.css';
 import Image1 from '../../assets/images/img1.jpg';
 import CardView from '../../components/CardView/CardView';
 import Button from 'react-bootstrap/Button';
+import { Link } from 'react-router-dom';
+
 
 class Cards extends Component {
-    
+
     state = {
-        
+
         showTracks: true
     };
 
-    constructor(props){
-        super({props});
-        this.cards= props.cards ;
-    }
     toggleNumberOfTracks = () => {
         const doesShow = this.state.showTracks;
         this.setState({ showTracks: !doesShow });
@@ -24,28 +22,33 @@ class Cards extends Component {
     };
 
     render() {
-        console.log(this.props);
+
+        const { props } = this.props;
+        
         return (
-        <div>
-            <Button variant="flat" onClick={this.toggleNumberOfTracks}>Toggle Number Of Tracks</Button>
-            <Carousel variant="dark" prevLabel={null} nextLabel={null}> {this.cards.map(({ name, description, nbOfTracks, createdDate, updatedDate, _id }) => {
-                return (
-                    <Carousel.Item key={_id}>
-                        <img className="image align-items-center justify-content-center min-vh-100" src={Image1} alt='slide1'></img>
-                        <Carousel.Caption className="carousel-caption" >
-                            <CardView
-                                name={name}
-                                description={description}
-                                nbOfTracks={nbOfTracks}
-                                click={this.state.showTracks}
-                                createdDate={createdDate}>
+            <div>
+                <Button variant="flat" onClick={this.toggleNumberOfTracks}>Toggle Number Of Tracks</Button>
+                <Carousel variant="dark" prevLabel={null} nextLabel={null}> {props.map(({ name, description, nbOfTracks, createdDate, updatedDate, _id }) => {
+                    return (
+                        <Carousel.Item key={_id} >
+                            <Link to={{pathname:'/focusCard', state: {id: _id}}} >
+                                <img className="image align-items-center justify-content-center min-vh-100" src={Image1} alt='slide1'></img>
 
-                            </CardView>
-                        </Carousel.Caption>
-                    </Carousel.Item>)
+                            </Link>
+                            <Carousel.Caption className="carousel-caption" >
+                                <CardView
+                                    name={name}
+                                    description={description}
+                                    nbOfTracks={nbOfTracks}
+                                    click={this.state.showTracks}
+                                    createdDate={createdDate}>
 
-            })}
-            </Carousel></div>)
+                                </CardView>
+                            </Carousel.Caption>
+                        </Carousel.Item>)
+
+                })}
+                </Carousel></div>)
 
     }
 }
