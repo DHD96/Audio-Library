@@ -7,7 +7,7 @@ import validator from 'validator';
 import * as actions from '../../store/actions/index';
 import { connect } from 'react-redux';
 import { sha256, sha224 } from 'js-sha256';
-import instance  from '../../instance/axios';
+import instance from '../../instance/axios';
 import { Redirect } from 'react-router';
 
 class SignIn extends Component {
@@ -61,7 +61,9 @@ class SignIn extends Component {
             }
 
         },
-        showSignIn: true
+        showSignIn: true,
+        confirmationError: false,
+        isValid: false
     }
 
     validate(value, rules) {
@@ -83,18 +85,25 @@ class SignIn extends Component {
         event.preventDefault();
         //check password if sign in check if password == confirm password if sign up
         //axios post
-        const password =sha256(this.state.form.password.value);
-        if(this.state.showSignIn){
-            this.props.onAuth(this.state.form.email.value, password, this.state.showSignIn);          
-        }
-        else{
+        const password = sha256(this.state.form.password.value);
+        if (this.state.showSignIn) {
             this.props.onAuth(this.state.form.email.value, password, this.state.showSignIn);
-            const info = {
-                name: this.state.form.name.value,
-                email: this.state.form.email.value,
-                password: password
+        }
+        else {
+            if (this.state.form.password.value !== this.state.form.confirmPassword.value) {
+                this.setState({ confirmationError: true });
             }
-            instance.post('/accountInfo.json',info);
+            else {
+                this.setState({confirmationError: false});
+                this.props.onAuth(this.state.form.email.value, password, this.state.showSignIn);
+                const info = {
+                    name: this.state.form.name.value,
+                    email: this.state.form.email.value,
+                    password: password
+                }
+                instance.post('/accountInfo.json', info);
+            }
+
         }
     }
 
@@ -110,9 +119,14 @@ class SignIn extends Component {
         updatedElement.touched = true;
         updatedElement.isValid = this.validate(updatedElement.value, updatedElement.rules);
         updatedForm[inputId] = updatedElement;
+        let formValid = true;
+        for( let inputId in updatedForm){
+            formValid= updatedElement.isValid && formValid;
+        }
+        
         this.setState({ form: updatedForm });
-    };
-
+        this.setState({isValid: formValid});
+    }
     render() {
         return (
             <div className="box">
@@ -131,21 +145,22 @@ class SignIn extends Component {
                         {this.state.showSignIn ? null : <Input invalid={!this.state.form.confirmPassword.isValid && this.state.form.confirmPassword.touched} type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={(event) => this.inputChangedHandler(event, "confirmPassword")}></Input>}
                         <div className="container">
                             <div className="text-left">
-                                <Button type="submit" className="btn" onClick={this.submitHandler}>{this.state.showSignIn ? "Sign In" : "Sign Up"}</Button>
+                                <Button disabled={!this.state.isValid} type="submit" className={(!this.state.isValid)? 'disabled': 'btn'} onClick={this.submitHandler}>{this.state.showSignIn ? "Sign In" : "Sign Up"}</Button>
                             </div>
                         </div>
-                        {this.props.isError? <div className="error">Wrong Email or Password!</div>:null}
-                        {this.props.isRedirect? <Redirect to='/Audio-Library'></Redirect>: null}
+                        {this.props.isError ? <div className="error">Wrong Email or Password!</div> : null}
+                        {this.state.confirmationError ? <div className="error">The password confirmation is invalid!</div> : null}
+                        {this.props.isRedirect ? <Redirect to='/Audio-Library'></Redirect> : null}
                     </form>
                 </div>
             </div>);
     }
 }
 
-const mapStateToProps = (state) =>{
-    
+const mapStateToProps = (state) => {
+
     return {
-        isError : state.error !== null,
+        isError: state.error !== null,
         isRedirect: state.redirect
     }
 };

@@ -23,3 +23,9 @@
     font-weight:bold;
     color:red;
 }
+.disabled{
+    background-color: grey !important;
+    color: white;
+    padding-left: 6px !important;
+
+}
