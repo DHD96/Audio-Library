@@ -7,6 +7,8 @@ import instance from './instance/axios';
 import { BrowserRouter, Route } from 'react-router-dom';
 import SignIn from './components/SignIn/SignIn';
 import FocusCard from './components/FocusCard/FocusCard';
+import * as actions from './store/actions/index';
+import { connect } from 'react-redux';
 
 class App extends Component {
 
@@ -20,6 +22,8 @@ class App extends Component {
     }).catch((error)=>{
       console.log(error);
     });
+    this.props.autoSignIn();
+
   }
 
   render() {
@@ -40,4 +44,9 @@ class App extends Component {
 
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    autoSignIn: ()=> dispatch(actions.auth_check())
+  }
+}
+export default connect(null, mapDispatchToProps)(App);

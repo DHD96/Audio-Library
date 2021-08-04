@@ -1,1 +1,1 @@
-export {auth} from './auth';
+export {auth, auth_logout, auth_check} from './auth';

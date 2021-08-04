@@ -6,6 +6,8 @@ import Image1 from '../../assets/images/img1.jpg';
 import CardView from '../../components/CardView/CardView';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
+import * as actions from '../../store/actions/index';
+import { connect } from 'react-redux';
 
 
 class Cards extends Component {
@@ -31,10 +33,12 @@ class Cards extends Component {
                 <Carousel variant="dark" prevLabel={null} nextLabel={null}> {props.map(({ name, description, nbOfTracks, createdDate, updatedDate, _id }) => {
                     return (
                         <Carousel.Item key={_id} >
-                            <Link to={{pathname:'/focusCard', state: {id: _id}}} >
+                            {this.props.isAuthenticated ? <Link to={{pathname:'/focusCard', state: {id: _id}}} >
                                 <img className="image align-items-center justify-content-center min-vh-100" src={Image1} alt='slide1'></img>
 
-                            </Link>
+                            </Link>:
+                            <img className="image align-items-center justify-content-center min-vh-100" src={Image1} alt='slide1'></img>
+                            }
                             <Carousel.Caption className="carousel-caption" >
                                 <CardView
                                     name={name}
@@ -53,6 +57,10 @@ class Cards extends Component {
     }
 }
 
+const mapStateToProps = state =>{
+    return{
+        isAuthenticated: state.token !== null
+    }
+}
 
-
-export default Cards;
+export default connect(mapStateToProps,null)(Cards);

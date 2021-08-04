@@ -6,6 +6,10 @@ import Button from 'react-bootstrap/Button';
 import validator from 'validator';
 import * as actions from '../../store/actions/index';
 import { connect } from 'react-redux';
+import { sha256, sha224 } from 'js-sha256';
+import instance  from '../../instance/axios';
+import { Redirect } from 'react-router';
+
 class SignIn extends Component {
 
     state = {
@@ -79,11 +83,18 @@ class SignIn extends Component {
         event.preventDefault();
         //check password if sign in check if password == confirm password if sign up
         //axios post
+        const password =sha256(this.state.form.password.value);
         if(this.state.showSignIn){
-            this.props.onAuth(this.state.form.email.value, this.state.form.password.value, this.state.showSignIn);
+            this.props.onAuth(this.state.form.email.value, password, this.state.showSignIn);          
         }
         else{
-            this.props.onAuth(this.state.form.email.value, this.state.form.password.value, this.state.showSignIn);
+            this.props.onAuth(this.state.form.email.value, password, this.state.showSignIn);
+            const info = {
+                name: this.state.form.name.value,
+                email: this.state.form.email.value,
+                password: password
+            }
+            instance.post('/accountInfo.json',info);
         }
     }
 
@@ -123,15 +134,24 @@ class SignIn extends Component {
                                 <Button type="submit" className="btn" onClick={this.submitHandler}>{this.state.showSignIn ? "Sign In" : "Sign Up"}</Button>
                             </div>
                         </div>
+                        {this.props.isError? <div className="error">Wrong Email or Password!</div>:null}
+                        {this.props.isRedirect? <Redirect to='/Audio-Library'></Redirect>: null}
                     </form>
                 </div>
             </div>);
     }
 }
 
+const mapStateToProps = (state) =>{
+    
+    return {
+        isError : state.error !== null,
+        isRedirect: state.redirect
+    }
+};
 const mapDispatchToProps = dispatch => {
     return {
         onAuth: (email, password, isSignIn) => dispatch(actions.auth(email, password, isSignIn))
     };
 }
-export default connect(null, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

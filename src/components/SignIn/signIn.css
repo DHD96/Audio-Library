@@ -18,3 +18,8 @@
     color:white !important;
     padding-left: 6px !important;
 }
+
+.error{
+    font-weight:bold;
+    color:red;
+}
