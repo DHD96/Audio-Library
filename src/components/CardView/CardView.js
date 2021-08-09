@@ -1,22 +1,35 @@
-import React  from 'react';
+import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './cardView.css';
+import Button from 'react-bootstrap/Button';
+import * as actions from '../../store/actions/index';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { render } from '@testing-library/react';
 
-const CardView = ({ name, description, createdDate, updatedDate, nbOfTracks, click }) => {
-        return (<div className="CardView" >
-                <h2 className="Title"> {name}</h2>
-                <p className="Description">Description: {description}</p>
-                <div className="Date">Date of creation: {createdDate}</div>
-                {click === true ?
-                        <span className="NumberOfTracks">Number of tracks: {nbOfTracks}</span>
-                        :
-                        <span></span>
-                }
+class CardView extends Component {
+        render() {
+                const { name, description, createdDate, updatedDate, nbOfTracks, click, _id } = this.props;
+                return (<div className="CardView" >
+                        <h2 className="Title"> {name}</h2>
+                        <p className="Description">Description: {description}</p>
+                        <div className="Date">Date of creation: {createdDate}</div>
+                        {click === true ?
+                                <span className="NumberOfTracks">Number of tracks: {nbOfTracks}</span>
+                                :
+                                null
+                        }
+                        {this.props.isAuthenticated ? <div><Link to={{ pathname: "/focusCard", state: { id: _id } }}><Button className="details">View details</Button></Link></div> : null}
+                </div>
+                )
+                        ;
 
-                </div>)
-                ;
-
-
+        }
+}
+const mapStateToProps = state => {
+        return {
+                isAuthenticated: state.token !== null
+        }
 }
 
-export default CardView;
+export default connect(mapStateToProps, null)(CardView);

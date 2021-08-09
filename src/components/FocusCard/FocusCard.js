@@ -12,17 +12,8 @@ class FocusCard extends Component{
 
     fetchData(){
         instance.get('/albums.json').then((response)=>{
-            let index = 0;
-            const {id} = this.props.location.state;
-            console.log(id);
-            for(let i = 0; i < response.data.length; i= i + 1){
-                console.log(response.data[i]._id);
-                if(id=== response.data[i]._id){
-                    
-                    index = i;
-                }
-            }
-            
+            const  { id }= this.props.location.state;     
+            const index = response.data.findIndex(element => element._id === id);
             this.setState({album: response.data[index]});
         })
     }

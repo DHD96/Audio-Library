@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './signIn.css';
 import Input from '../Input/Input';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -6,155 +6,104 @@ import Button from 'react-bootstrap/Button';
 import validator from 'validator';
 import * as actions from '../../store/actions/index';
 import { connect } from 'react-redux';
-import { sha256, sha224 } from 'js-sha256';
+import { sha256 } from 'js-sha256';
 import instance from '../../instance/axios';
 import { Redirect } from 'react-router';
+import { useFormik } from 'formik';
 
-class SignIn extends Component {
 
-    state = {
-        form:
-        {
-            email:
-            {
-                value: "",
-                isValid: false,
-                rules: {
-                    required: true,
-                    email: true
-                },
-                touched: false
 
-            },
-            name:
-            {
-                value: "",
-                isValid: false,
-                rules: {
-                    required: true
-                },
-                touched: false
+const SignIn = (props) => {
+    const [showSignIn, setShowSignIn] = useState(true);
+    const [isValid, setIsValid] = useState(false);
+    const validate = (values) => {
+        const errors = {};
+        if (!values.name && !showSignIn) {
+            errors.name = 'Required';
 
-            },
-            password:
-            {
-                value: "",
-                isValid: false,
-                rules: {
-                    required: true,
-                    minLength: 8,
-                    isPassword: true
-                },
-                touched: false
+        }
+        if (!values.email) {
+            errors.email = 'Required';
 
-            },
-            confirmPassword:
-            {
-                value: "",
-                isValid: false,
-                rules: {
-                    required: true,
-                    minLength: 8,
-                    isPassword: true
-                },
-                touched: false
-            }
-
+        }
+        else if (values.email && !validator.isEmail(values.email)) {
+            errors.email = 'Invalid email address';
+        }
+        if (!values.password) {
+            errors.password = 'Required';
+        }
+        if (!validator.isStrongPassword(values.password, { minLength: 8 })) {
+            errors.password = 'Password must contain at least 8 characters, at least one uppercase, one lowercase characters and one digit.';
+        }
+        if (!values.confirmPassword && !showSignIn) {
+            errors.confirmPassword = 'Required';
+        }
+        if (values.password !== values.confirmPassword && !showSignIn) {
+            errors.confirmPassword = 'Confirmation password must be the same as the password';
+        }
+        
+        return errors;
+    };
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
         },
-        showSignIn: true,
-        confirmationError: false,
-        isValid: false
-    }
-
-    validate(value, rules) {
-        let isValid = true;
-
-        if (rules.required) {
-            isValid = value.trim() !== "" && isValid;
-        }
-        if (rules.minLength) {
-            isValid = (rules.minLength < value.trim().length) && isValid;
-        }
-        if (rules.email) {
-            isValid = isValid && validator.isEmail(value);
-        }
-        return isValid;
-    }
-
-    submitHandler = (event) => {
-        event.preventDefault();
-        //check password if sign in check if password == confirm password if sign up
-        //axios post
-        const password = sha256(this.state.form.password.value);
-        if (this.state.showSignIn) {
-            this.props.onAuth(this.state.form.email.value, password, this.state.showSignIn);
-        }
-        else {
-            if (this.state.form.password.value !== this.state.form.confirmPassword.value) {
-                this.setState({ confirmationError: true });
+        validate,
+        onSubmit: (values) => {
+            const password = sha256(values.password);
+            if (showSignIn) {
+                props.onAuth(values.email, password, showSignIn);
             }
             else {
-                this.setState({confirmationError: false});
-                this.props.onAuth(this.state.form.email.value, password, this.state.showSignIn);
+                props.onAuth(values.email, password, showSignIn);
                 const info = {
-                    name: this.state.form.name.value,
-                    email: this.state.form.email.value,
+                    name: values.name,
+                    email: values.email,
                     password: password
                 }
                 instance.post('/accountInfo.json', info);
             }
-
+        }
+    })
+    const toggleHandler = () => {
+        if (showSignIn) {
+            setShowSignIn(false);
+        }
+        else {
+            setShowSignIn(true);
         }
     }
+    return (
+        <div className="box">
+            <div className="form">
+                <div className="container">
+                    <div className="text-left">
+                        <h1>{showSignIn ? "Sign In" : "Sign Up"}</h1>
 
-    toggleHandler() {
-        const doesShow = this.state.showSignIn;
-        this.setState({ showSignIn: !doesShow });
-    }
-
-    inputChangedHandler = (event, inputId) => {
-        let updatedForm = { ...this.state.form };
-        let updatedElement = { ...this.state.form[inputId] };
-        updatedElement.value = event.target.value;
-        updatedElement.touched = true;
-        updatedElement.isValid = this.validate(updatedElement.value, updatedElement.rules);
-        updatedForm[inputId] = updatedElement;
-        let formValid = true;
-        for( let inputId in updatedForm){
-            formValid= updatedElement.isValid && formValid;
-        }
-        
-        this.setState({ form: updatedForm });
-        this.setState({isValid: formValid});
-    }
-    render() {
-        return (
-            <div className="box">
-                <div className="form">
-                    <div className="container">
-                        <div className="text-left">
-                            <h1>{this.state.showSignIn ? "Sign In" : "Sign Up"}</h1>
-
-                            <Button onClick={this.toggleHandler.bind(this)}>{this.state.showSignIn ? "Switch to Sign up" : "Switch to Sign in"}</Button>
-                        </div>
+                        <Button onClick={toggleHandler}>{showSignIn ? "Switch to Sign up" : "Switch to Sign in"}</Button>
                     </div>
-                    <form onSubmit={this.submitHandler}>
-                        {this.state.showSignIn ? null : <Input invalid={!this.state.form.name.isValid && this.state.form.name.touched} type="text" name="name" placeholder="Your Name" label="Name" onChange={(event) => this.inputChangedHandler(event, "name")}></Input>}
-                        <Input invalid={!this.state.form.email.isValid && this.state.form.email.touched} type="text" name="email" placeholder="Your Email" label="Email" onChange={(event) => this.inputChangedHandler(event, "email")}></Input>
-                        <Input invalid={!this.state.form.password.isValid && this.state.form.password.touched} type="password" name="password" placeholder="Your Password" label="Password" onChange={(event) => this.inputChangedHandler(event, "password")}></Input>
-                        {this.state.showSignIn ? null : <Input invalid={!this.state.form.confirmPassword.isValid && this.state.form.confirmPassword.touched} type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={(event) => this.inputChangedHandler(event, "confirmPassword")}></Input>}
+
+                    <form onSubmit={formik.handleSubmit}>
+                        {showSignIn ? null : <div><Input id="name" onBlur={formik.handleBlur} value={formik.values.name} invalid={formik.errors.name && formik.touched.name} type="text" name="name" placeholder="Your Name" label="Name" onChange={formik.handleChange} />{formik.errors.name && formik.touched.name}</div>}
+                        <div><Input id="email" onBlur={formik.handleBlur} value={formik.values.email} invalid={formik.errors.email && formik.touched.email} type="text" name="email" placeholder="Your Email" label="Email" onChange={formik.handleChange} />{formik.errors.email && formik.touched.email && formik.errors.email}</div>
+                        <div><Input id="password" onBlur={formik.handleBlur} value={formik.values.password} invalid={formik.errors.password && formik.touched.password} type="password" name="password" placeholder="Your Password" label="Password" onChange={formik.handleChange} />{formik.errors.password && formik.touched.password && formik.errors.password}</div>
+                        {showSignIn ? null : <div><Input id="confirmPassword" onBlur={formik.handleBlur} value={formik.values.confirmPassword} invalid={formik.errors.confirmPassword && formik.touched.password} type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={formik.handleChange} />{formik.errors.confirmPassword && formik.touched.confirmPassword}</div>}
                         <div className="container">
                             <div className="text-left">
-                                <Button disabled={!this.state.isValid} type="submit" className={(!this.state.isValid)? 'disabled': 'btn'} onClick={this.submitHandler}>{this.state.showSignIn ? "Sign In" : "Sign Up"}</Button>
+                                <Button type="submit" >{showSignIn ? "Sign In" : "Sign Up"}</Button>
                             </div>
                         </div>
-                        {this.props.isError ? <div className="error">Wrong Email or Password!</div> : null}
-                        {this.state.confirmationError ? <div className="error">The password confirmation is invalid!</div> : null}
-                        {this.props.isRedirect ? <Redirect to='/Audio-Library'></Redirect> : null}
+                        {props.isError ? <div className="error">Wrong Email or Password!</div> : null}
+                        {props.isRedirect ? <Redirect to='/audioLibrary'></Redirect> : null}
                     </form>
+
                 </div>
-            </div>);
-    }
+            </div>
+        </div>
+    );
 }
 
 const mapStateToProps = (state) => {

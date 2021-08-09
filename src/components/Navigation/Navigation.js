@@ -13,12 +13,12 @@ class Navigation extends Component {
     return (
       <Navbar bg="light" fixed="top" >
         <Container>
-          <Navbar.Brand href="/Audio-Library">Audio Library</Navbar.Brand>
+          <Navbar.Brand href="/audioLibrary">Audio Library</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link as={Link} to='/Audio-Library'>Home</Nav.Link>
+            <Nav.Link as={Link} to='/audioLibrary'>Home</Nav.Link>
             {!this.props.isAuthenticated ?
             <Nav.Link as={Link} to='/signIn'>Sign In</Nav.Link>:
-            <Nav.Link as={Link} to='/Audio-Library' onClick={this.props.onLogout}>Sign Out</Nav.Link>
+            <Nav.Link as={Link} to='/audioLibrary' onClick={this.props.onLogout}>Sign Out</Nav.Link>
           }
           </Nav>
         </Container>
