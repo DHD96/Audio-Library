@@ -15,7 +15,7 @@ import { useFormik } from 'formik';
 
 const SignIn = (props) => {
     const [showSignIn, setShowSignIn] = useState(true);
-    const [isValid, setIsValid] = useState(false);
+    const [isValid, setIsValid] = useState(true);
     const validate = (values) => {
         const errors = {};
         if (!values.name && !showSignIn) {
@@ -42,6 +42,7 @@ const SignIn = (props) => {
             errors.confirmPassword = 'Confirmation password must be the same as the password';
         }
         
+        setIsValid(Object.keys(errors).length === 0);
         return errors;
     };
     const formik = useFormik({
@@ -93,7 +94,7 @@ const SignIn = (props) => {
                         {showSignIn ? null : <div><Input id="confirmPassword" onBlur={formik.handleBlur} value={formik.values.confirmPassword} invalid={formik.errors.confirmPassword && formik.touched.password} type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={formik.handleChange} />{formik.errors.confirmPassword && formik.touched.confirmPassword}</div>}
                         <div className="container">
                             <div className="text-left">
-                                <Button type="submit" >{showSignIn ? "Sign In" : "Sign Up"}</Button>
+                                <Button type="submit" className={!isValid? "disabled" : ""}>{showSignIn ? "Sign In" : "Sign Up"}</Button>
                             </div>
                         </div>
                         {props.isError ? <div className="error">Wrong Email or Password!</div> : null}

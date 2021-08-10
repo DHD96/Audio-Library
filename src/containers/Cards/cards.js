@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import Carousel from 'react-bootstrap/Carousel';
 import './cards.css';
@@ -8,45 +8,37 @@ import Button from 'react-bootstrap/Button';
 
 
 
-class Cards extends Component {
+const Cards = (cards) => {
+    const [showTracks, setShowTracks] = useState(true);
 
-    state = {
-
-        showTracks: true
-    };
-
-    toggleNumberOfTracks = () => {
-        this.setState(prev =>({ showTracks: !prev.showTracks }));
+    const toggleNumberOfTracks = () => {
+        setShowTracks(!showTracks);
 
     };
+    const { cardData } = cards;
 
-    render() {
+    return (
+        <div>
+            <Button variant="flat" onClick={toggleNumberOfTracks}>Toggle Number Of Tracks</Button>
+            <Carousel variant="dark" prevLabel={null} nextLabel={null}> {cardData.map(({ name, description, nbOfTracks, createdDate, updatedDate, _id }) => {
+                return (
+                    <Carousel.Item key={_id} >
+                        <img className="image align-items-center justify-content-center min-vh-100" src={Image1} alt='slide1'></img>
 
-        const { cardData } = this.props;
-        
-        return (
-            <div>
-                <Button variant="flat" onClick={this.toggleNumberOfTracks}>Toggle Number Of Tracks</Button>
-                <Carousel variant="dark" prevLabel={null} nextLabel={null}> {cardData.map(({ name, description, nbOfTracks, createdDate, updatedDate, _id }) => {
-                    return (
-                        <Carousel.Item key={_id} >
-                            <img className="image align-items-center justify-content-center min-vh-100" src={Image1} alt='slide1'></img>
-                            
-                            <Carousel.Caption className="carousel-caption" >
-                                <CardView
-                                    name={name}
-                                    description={description}
-                                    nbOfTracks={nbOfTracks}
-                                    click={this.state.showTracks}
-                                    createdDate={createdDate}
-                                    _id = {_id}/>
-                            </Carousel.Caption>
-                        </Carousel.Item>)
+                        <Carousel.Caption className="carousel-caption" >
+                            <CardView
+                                name={name}
+                                description={description}
+                                nbOfTracks={nbOfTracks}
+                                click={showTracks}
+                                createdDate={createdDate}
+                                _id={_id} />
+                        </Carousel.Caption>
+                    </Carousel.Item>)
 
-                })}
-                </Carousel></div>)
-
-    }
+            })}
+            </Carousel></div>)
 }
+
 
 export default Cards;

@@ -1,9 +1,9 @@
 import classes from './input.css';
 import React from 'react';
 
-const Input = (props)=>{
+const Input = (inputProps)=>{
     let classNames = ['InputElement'];
-    if( props.invalid){
+    if( inputProps.invalid){
         classNames.push('Invalid');
     }
     else{
@@ -12,10 +12,10 @@ const Input = (props)=>{
         }
     }
     
-    let inputElement=  <input className={classNames.join(' ')} {...props} ></input>
+    let inputElement=  <input className={classNames.join(' ')} {...inputProps} ></input>
     return (
     <div className="Input">
-        <label className="Label">{props.label}: </label>
+        <label className="Label">{inputProps.label}: </label>
         {inputElement}
     </div>)
 }

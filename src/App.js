@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
@@ -10,39 +10,32 @@ import { Provider } from 'react-redux';
 import Router from './hoc/Router.js';
 
 
-class App extends Component {
-
-  state = {
-    cards: []
-  }
-
-  componentDidMount() {
+const App = (props) => {
+  const [albums, setAlbums] = useState([]);
+  const { store } = props;
+  useEffect(() => {
     instance.get('/albums.json').then((response) => {
-      this.setState({ cards: response.data });
+      setAlbums(response.data);
     }).catch((error) => {
       console.log(error);
     });
-    this.props.autoSignIn();
+    props.autoSignIn();
+  }, [])
+ 
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Redirect to='/audioLibrary'></Redirect>
+        <div className="App">
+          <Navigation></Navigation>
 
-  }
-
-  render() {
-    const { store } = this.props
-    return (
-      <Provider store={store}>
-        <BrowserRouter>
-          <Redirect to='/audioLibrary'></Redirect>
-          <div className="App">
-            <Navigation></Navigation>
-
-            <Router cards = {this.state.cards}></Router>
-          </div>
-        </BrowserRouter>
-      </Provider>
-    );
-  }
-
+          {albums?<Router cards={albums}></Router>: null}
+        </div>
+      </BrowserRouter>
+    </Provider>
+  );
 }
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
