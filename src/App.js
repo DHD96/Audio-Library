@@ -8,7 +8,8 @@ import * as actions from './store/actions/index';
 import { connect } from 'react-redux';
 import { Provider } from 'react-redux';
 import Router from './hoc/Router.js';
-
+import Loader from "react-loader-spinner";
+import configureStore from './store-hooks/auth-store';
 
 const App = (props) => {
   const [albums, setAlbums] = useState([]);
@@ -21,7 +22,7 @@ const App = (props) => {
     });
     props.autoSignIn();
   }, [])
- 
+
   return (
     <Provider store={store}>
       <BrowserRouter>
@@ -29,7 +30,7 @@ const App = (props) => {
         <div className="App">
           <Navigation></Navigation>
 
-          {albums?<Router cards={albums}></Router>: null}
+          {albums ? <Router cards={albums}></Router> : <h1 className="Loading"> Loading ...</h1>}
         </div>
       </BrowserRouter>
     </Provider>

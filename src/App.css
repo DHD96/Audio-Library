@@ -8,7 +8,10 @@
 
 .Loading{
   padding-top: 20vh;
-  color:white;
+  background-color:white;
+  color:yellow;
+  text-align:center;
+  margin: auto;
 }
 
 

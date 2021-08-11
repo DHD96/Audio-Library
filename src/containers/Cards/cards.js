@@ -20,7 +20,7 @@ const Cards = (cards) => {
     return (
         <div>
             <Button variant="flat" onClick={toggleNumberOfTracks}>Toggle Number Of Tracks</Button>
-            <Carousel variant="dark" prevLabel={null} nextLabel={null}> {cardData.map(({ name, description, nbOfTracks, createdDate, updatedDate, _id }) => {
+            <Carousel variant="dark" prevLabel={null} nextLabel={null}> {cardData.map(({ name, description, nbOfTracks, createdDate, updatedDate, _id, songs }) => {
                 return (
                     <Carousel.Item key={_id} >
                         <img className="image align-items-center justify-content-center min-vh-100" src={Image1} alt='slide1'></img>
@@ -32,7 +32,8 @@ const Cards = (cards) => {
                                 nbOfTracks={nbOfTracks}
                                 click={showTracks}
                                 createdDate={createdDate}
-                                _id={_id} />
+                                _id={_id} 
+                                />
                         </Carousel.Caption>
                     </Carousel.Item>)
 

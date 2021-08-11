@@ -5,16 +5,28 @@
     margin:auto;
     padding-top:20vh;
     font-family: Roboto Condensed !important;
+    position:relative;
 
 }
 
 .imageFocus{
+    display:inline;
     width:35vw;
-    height:35vh;
-    float:left;
-    object-fit: contain;
+    height:37vh;
+    object-fit: fill;
 }
 
 .title{
     color: yellow;
 }
+.currentSong{
+    color:yellow;
+}
+
+.column{
+    display:flex;
+    flex-direction:column;
+    float: left;
+}
+
+

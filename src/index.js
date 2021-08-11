@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import auth from './store/reducers/auth';
 import thunk from 'redux-thunk';

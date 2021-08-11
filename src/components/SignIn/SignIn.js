@@ -33,7 +33,7 @@ const SignIn = (props) => {
             errors.password = 'Required';
         }
         if (!validator.isStrongPassword(values.password, { minLength: 8 })) {
-            errors.password = 'Password must contain at least 8 characters, at least one uppercase, one lowercase characters and one digit.';
+            errors.password = 'Password must contain at least 8 characters, at least one uppercase, one lowercase characters, one digit and one symbol.';
         }
         if (!values.confirmPassword && !showSignIn) {
             errors.confirmPassword = 'Required';
@@ -72,9 +72,21 @@ const SignIn = (props) => {
     const toggleHandler = () => {
         if (showSignIn) {
             setShowSignIn(false);
+            if(!isValid){
+                setIsValid(true);
+                formik.touched.email = false;
+                formik.touched.password = false;
+            }
         }
         else {
             setShowSignIn(true);
+            if(!isValid){
+                formik.touched.email= false;
+                formik.touched.password = false;
+                formik.touched.name = false;
+                formik.touched.confirmPassword = false;
+                setIsValid(true);
+            }
         }
     }
     return (
@@ -88,10 +100,10 @@ const SignIn = (props) => {
                     </div>
 
                     <form onSubmit={formik.handleSubmit}>
-                        {showSignIn ? null : <div><Input id="name" onBlur={formik.handleBlur} value={formik.values.name} invalid={formik.errors.name && formik.touched.name} type="text" name="name" placeholder="Your Name" label="Name" onChange={formik.handleChange} />{formik.errors.name && formik.touched.name}</div>}
+                        {showSignIn ? null : <div><Input id="name" onBlur={formik.handleBlur} value={formik.values.name} invalid={formik.errors.name && formik.touched.name} type="text" name="name" placeholder="Your Name" label="Name" onChange={formik.handleChange} />{formik.touched.name? formik.errors.name : "" }</div>}
                         <div><Input id="email" onBlur={formik.handleBlur} value={formik.values.email} invalid={formik.errors.email && formik.touched.email} type="text" name="email" placeholder="Your Email" label="Email" onChange={formik.handleChange} />{formik.errors.email && formik.touched.email && formik.errors.email}</div>
                         <div><Input id="password" onBlur={formik.handleBlur} value={formik.values.password} invalid={formik.errors.password && formik.touched.password} type="password" name="password" placeholder="Your Password" label="Password" onChange={formik.handleChange} />{formik.errors.password && formik.touched.password && formik.errors.password}</div>
-                        {showSignIn ? null : <div><Input id="confirmPassword" onBlur={formik.handleBlur} value={formik.values.confirmPassword} invalid={formik.errors.confirmPassword && formik.touched.password} type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={formik.handleChange} />{formik.errors.confirmPassword && formik.touched.confirmPassword}</div>}
+                        {showSignIn ? null : <div><Input id="confirmPassword" onBlur={formik.handleBlur} value={formik.values.confirmPassword} invalid={formik.errors.confirmPassword && formik.touched.password} type="password" name="confirmPassword" placeholder="Confirm Password" label="Confirm Password" onChange={formik.handleChange} />{ formik.touched.confirmPassword? formik.errors.confirmPassword : "" }</div>}
                         <div className="container">
                             <div className="text-left">
                                 <Button type="submit" className={!isValid? "disabled" : ""}>{showSignIn ? "Sign In" : "Sign Up"}</Button>

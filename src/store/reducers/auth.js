@@ -15,7 +15,6 @@ const reducer = (state = initialState, action) => {
         case actionTypes.AUTH_SUCCESS:
             return updateObject(state, { token: action.idToken, userId: action.userId, error: null});
         case actionTypes.AUTH_FAILURE:
-            console.log(action.error);
             return updateObject(state, {error: action.error})
         case actionTypes.AUTH_LOGOUT:
             localStorage.removeItem('auth');
