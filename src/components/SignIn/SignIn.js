@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Button from 'react-bootstrap/Button';
 import validator from 'validator';
 import * as actions from '../../store/actions/index';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { sha256 } from 'js-sha256';
 import instance from '../../instance/axios';
 import { Redirect } from 'react-router';
@@ -16,6 +16,8 @@ import { useFormik } from 'formik';
 const SignIn = (props) => {
     const [showSignIn, setShowSignIn] = useState(true);
     const [isValid, setIsValid] = useState(true);
+    const { error, redirect } = useSelector(state => state) ;
+    const dispatch = useDispatch();
     const validate = (values) => {
         const errors = {};
         if (!values.name && !showSignIn) {
@@ -56,10 +58,11 @@ const SignIn = (props) => {
         onSubmit: (values) => {
             const password = sha256(values.password);
             if (showSignIn) {
-                props.onAuth(values.email, password, showSignIn);
+                dispatch(actions.auth(values.email, password, showSignIn))
+
             }
             else {
-                props.onAuth(values.email, password, showSignIn);
+                dispatch(actions.auth(values.email, password, showSignIn))
                 const info = {
                     name: values.name,
                     email: values.email,
@@ -109,8 +112,8 @@ const SignIn = (props) => {
                                 <Button type="submit" className={!isValid? "disabled" : ""}>{showSignIn ? "Sign In" : "Sign Up"}</Button>
                             </div>
                         </div>
-                        {props.isError ? <div className="error">Wrong Email or Password!</div> : null}
-                        {props.isRedirect ? <Redirect to='/audioLibrary'></Redirect> : null}
+                        {error!==null && error.length>0 ? <div className="error">Wrong Email or Password!</div> : null}
+                        {redirect==true ? <Redirect to='/audioLibrary'></Redirect> : null}
                     </form>
 
                 </div>
@@ -119,16 +122,4 @@ const SignIn = (props) => {
     );
 }
 
-const mapStateToProps = (state) => {
-
-    return {
-        isError: state.error !== null,
-        isRedirect: state.redirect
-    }
-};
-const mapDispatchToProps = dispatch => {
-    return {
-        onAuth: (email, password, isSignIn) => dispatch(actions.auth(email, password, isSignIn))
-    };
-}
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default SignIn;

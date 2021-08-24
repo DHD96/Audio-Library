@@ -3,11 +3,12 @@ import instance from '../../instance/axios';
 import './focusCard.css';
 import Pagination from 'react-bootstrap/Pagination';
 import Image1 from '../../assets/images/img1.jpg';
-
+import { useParams } from "react-router-dom"
 const FocusCard = (cardProps) => {
     const [album, setAlbum] = useState([]);
     const [songs, setSongs] = useState([]);
     const [active, setActive] = useState(0);
+    const { id } = useParams();
     const songSelectHandler = (index)=>{
         setActive(index);
     }
@@ -23,13 +24,13 @@ const FocusCard = (cardProps) => {
     }
     useEffect(() => {
         instance.get('/albums.json').then((response) => {
-            const { id } = cardProps.location.state;
-            const index = response.data.findIndex(element => element._id === id);
+            
+            const index = response.data.findIndex(element => element._id == id);
             setAlbum(response.data[index]);
             setSongs(response.data[index].Songs);
         })
 
-    }, []);
+    }, [id]);
     return (
         <div className="focusPage">
             <div className="column">

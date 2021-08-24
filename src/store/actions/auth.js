@@ -7,11 +7,12 @@ export const auth_start = () => {
     }
 };
 
-export const auth_success = (token, userId) => {
+export const auth_success = (token, userId, expiresAt) => {
     return {
         type: actionTypes.AUTH_SUCCESS,
         idToken: token,
-        userId: userId
+        userId: userId,
+        expiresAt: expiresAt
     }
 };
 
@@ -45,26 +46,6 @@ export const auth_redirect = (redirect)=>{
     }
 }
 
-export const auth_check = () =>{
-    return dispatch =>{
-        const token = localStorage.getItem('auth');
-        if(!token){
-            dispatch(auth_logout());
-        }
-        else{
-            const expiration =new Date(localStorage.getItem('expiration'));
-            if(expiration <= new Date()){
-                dispatch(auth_logout());
-
-            }
-            else{        
-                const userId = localStorage.getItem('id');
-                dispatch(auth_success(token, userId ));
-                dispatch(auth_timeout((expiration.getTime() - new Date().getTime())/1000));
-            }
-        }
-    }
-};
 
 export const auth = (email, password, isSignIn) => {
     return dispatch => {
@@ -80,13 +61,11 @@ export const auth = (email, password, isSignIn) => {
         }
         axios.post(url, auth_data)
             .then(response => {
-                dispatch(auth_success(response.data.idToken, response.data.localId));
+                const expirationDate = new Date(new Date().getTime() + response.data.expiresIn *1000);
+                dispatch(auth_success(response.data.idToken, response.data.localId, expirationDate));
                 dispatch(auth_redirect(true));
-                const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000)
-                localStorage.setItem('auth', response.data.idToken);
-                localStorage.setItem('expiration', expirationDate);
-                localStorage.setItem('id', response.data.localId);
-                dispatch(auth_timeout(response.data.expiresIn * 1000));
+                
+                dispatch(auth_timeout(response.data.expiresIn*1000));
 
             })
             .catch(err => {

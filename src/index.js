@@ -5,12 +5,21 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore, applyMiddleware} from 'redux';
 import auth from './store/reducers/auth';
 import thunk from 'redux-thunk';
+import {persistStore, persistReducer} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import expireIn from "redux-persist-transform-expire-in";
 
-const store = createStore(auth, applyMiddleware(thunk));
-
+const persistConfig = {
+  key: "root",
+  storage,
+  transforms: [expireIn(3600 * 1000, 'expirationKey', [])]
+};
+const persistedReducer = persistReducer(persistConfig, auth);
+const store = createStore(persistedReducer, applyMiddleware(thunk));
+const persistor = persistStore(store);
 ReactDOM.render(
 
     <React.StrictMode>
